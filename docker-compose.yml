@@ -1,0 +1,34 @@
+version: "3"
+
+    services:
+      n8n:
+        image: n8nio/n8n:latest
+        restart: unless-stopped
+        ports:
+          - "5678:5678"
+        environment:
+          # ----------- N8N CORE ----------
+          - N8N_BASIC_AUTH_ACTIVE=true                # protege con login
+          - N8N_BASIC_AUTH_USER=${N8N_USER}
+          - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+          - N8N_HOST=${RENDER_EXTERNAL_HOSTNAME}      # el dominio que Render asignará
+          - N8N_PROTOCOL=https
+          - N8N_PORT=443
+
+          # ----------- CREDENCIALES ----------
+          # OpenAI
+          - OPENAI_API_KEY=${OPENAI_API_KEY}
+          # Twilio
+          - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+          - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+          - TWILIO_WHATSAPP_NUMBER=${TWILIO_WHATSAPP_NUMBER}
+          # Google (OAuth JSON como string base64)
+          - GOOGLE_SERVICE_ACCOUNT=${GOOGLE_SERVICE_ACCOUNT}
+          - GOOGLE_CALENDAR_ID=${GOOGLE_CALENDAR_ID}
+          # Firestore (service‑account JSON base64)
+          - FIREBASE_SERVICE_ACCOUNT=${FIREBASE_SERVICE_ACCOUNT}
+        volumes:
+          - n8n_data:/root/.n8n
+
+    volumes:
+      n8n_data:
